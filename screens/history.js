@@ -37,6 +37,7 @@ function history () {
   }
   React.useEffect(()=>{
     getUpcomingTrips()
+    console.log(TripTime)
     if(TripTime.length<=0)
     {
       getTripTime()
@@ -100,7 +101,7 @@ else {
 
 const formatAMPM=(timeRef)=> {
 
-  var TimeTrip = ReturnTimeFormat(timeRef)
+  var TimeTrip = ReturnTimeFormat("04:00 PM")
 
   
   var myDate2 = new Date();
@@ -151,7 +152,7 @@ const formatAMPM=(timeRef)=> {
      <Text style={styles.tripdetailtext}>Starting Time:</Text>
      <Text style={styles.tripdetailtext}>{item.startingTime}</Text>
      </View>
-      {Number(TripTime[0])==0 && Number(TripTime[1])==0&& Number(TripTime[2])<=10?
+      {Number(TripTime[0])==0 && Number(TripTime[1])==0&& Number(TripTime[2])<=20?
         (<View style={styles.TripDetailCard}>
       <TouchableOpacity style={styles.ButtonStyle} ><Text style={styles.ButtonText}>Track Bus</Text></TouchableOpacity>
 

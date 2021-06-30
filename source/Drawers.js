@@ -33,7 +33,7 @@ const Drawers = () => {
            <Drawer.Screen name ="TripDetail" component = {DetailScreen}/>
            <Drawer.Screen name ="history" component = {history}/>
            <Drawer.Screen name ="Logout" component = {Logout}/>
-           <Drawer.Screen name ="APUbus" component = {APUbus}/>
+           {/* <Drawer.Screen name ="APUbus" component = {APUbus}/> */}
            <Drawer.Screen name ="APIITbus" component = {APIITbus}/>
            <Drawer.Screen name ="CObus" component = {CObus}/>
      </Drawer.Navigator> 
