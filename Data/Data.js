@@ -18,7 +18,7 @@ export const locations = [
     ,screenName: 'APIITbus',
 },
 {
-    title: 'BUS STOP SOUTH CITY',
+    title: 'SOUTH CITY',
     latitude: 3.0286,
     longitude: 101.7094,
     markerImage: "https://w7.pngwing.com/pngs/349/486/png-transparent-bus-stop-computer-icons-bus-text-logo-vector-icons-thumbnail.png" ,  
@@ -26,7 +26,7 @@ export const locations = [
     ,screenName: 'profile',
 },
 {
-    title: 'BUS STOP FORTUNE PARK',
+    title: 'FORTUNE PARK',
     latitude: 3.0362,
     longitude: 101.7074,
     markerImage: "https://w7.pngwing.com/pngs/349/486/png-transparent-bus-stop-computer-icons-bus-text-logo-vector-icons-thumbnail.png" ,   
@@ -34,7 +34,7 @@ export const locations = [
     ,screenName: 'profile',
 },
 {
-    title: 'BUS STOP SKY VILLA',
+    title: 'SKY VILLA',
     latitude: 3.0403,
     longitude: 101.7065,
     markerImage: "https://w7.pngwing.com/pngs/349/486/png-transparent-bus-stop-computer-icons-bus-text-logo-vector-icons-thumbnail.png" ,   
@@ -42,7 +42,7 @@ export const locations = [
     ,screenName: 'profile',
 },
 {
-    title: 'BUS STOP LRT',
+    title: 'LRT',
     latitude: 3.0587,
     longitude: 101.6917,
     markerImage: "https://w7.pngwing.com/pngs/349/486/png-transparent-bus-stop-computer-icons-bus-text-logo-vector-icons-thumbnail.png" ,   
@@ -50,7 +50,7 @@ export const locations = [
     ,screenName: 'profile',
 },
 {
-    title: 'BUS STOP ENDAH',
+    title: 'ENDAH',
     latitude: 3.0638,
     longitude: 101.6969,
     markerImage: "https://w7.pngwing.com/pngs/349/486/png-transparent-bus-stop-computer-icons-bus-text-logo-vector-icons-thumbnail.png" ,   
@@ -58,7 +58,7 @@ export const locations = [
     ,screenName: 'profile', 
 },
 {
-    title: 'BUS STOP COVILLEA',
+    title: 'COVILLEA',
     latitude: 3.0590,
     longitude: 101.6851,
     markerImage: "https://w7.pngwing.com/pngs/349/486/png-transparent-bus-stop-computer-icons-bus-text-logo-vector-icons-thumbnail.png" ,   

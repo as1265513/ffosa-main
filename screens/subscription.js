@@ -248,7 +248,6 @@ export default function subscription({navigation,route}) {
          seat:seat,
          startingTime:startingtime,
          tripStatus:"upcoming",
-
         }).then(()=>{
           setTripStatus("booked")
           updateBookedSeat()

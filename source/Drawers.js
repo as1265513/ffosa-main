@@ -19,6 +19,7 @@ import APIITbus from '../schdules/APIITbus';
 import CObus from '../schdules/CObus';
 import DetailScreen from '../screens/DetailTripDriverScreen';
 import CounterDownTimer from './CounterDown';
+import TrackBus from '../screens/TrckBus';
 
 const Drawer = createDrawerNavigator();
 
@@ -33,9 +34,11 @@ const Drawers = () => {
            <Drawer.Screen name ="TripDetail" component = {DetailScreen}/>
            <Drawer.Screen name ="history" component = {history}/>
            <Drawer.Screen name ="Logout" component = {Logout}/>
-           {/* <Drawer.Screen name ="APUbus" component = {APUbus}/> */}
+           <Drawer.Screen name ="APUbus" component = {APUbus}/>
            <Drawer.Screen name ="APIITbus" component = {APIITbus}/>
            <Drawer.Screen name ="CObus" component = {CObus}/>
+           <Drawer.Screen name ="TrackBus" component = {TrackBus}/>
+
      </Drawer.Navigator> 
   
   ) }

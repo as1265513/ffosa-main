@@ -10,21 +10,42 @@ import {
     useColorScheme,
     View,
   } from 'react-native';
-import firestore from "@react-native-firebase/firestore";
+import firestore, { firebase } from "@react-native-firebase/firestore";
 import Auth from "@react-native-firebase/auth";
 
 import Icon from 'react-native-vector-icons/Ionicons'
 import { Title } from 'react-native-paper';
 import Panel from '../source/Panel';
 
-let DataStructure=[{"documentId": "", "fromlocation": "", "seat": "", "startingTime": "", "tolocation": "", "tripStatus": ""}]
-function history () {
+let DataStructure=[{"documentId": "No Trip", "fromlocation": "No Trip", "seat": "No Trip", "startingTime": "No Trip", "tolocation": "No Trip", "tripStatus": "No Trip"}]
+function history ({navigation}) {
   
- const [UpcomingTrips,setUpcomingTrips] = React.useState(DataStructure)
+ const [UpcomingTrips,setUpcomingTrips] = React.useState([])
   const [TripTime,SetTripTime] = React.useState([])
- const [TripHistory,setTripHistory] = React.useState(["1","2","10","10","10"])
- const [Missed,setMissedTrips] = React.useState(["1","2","10","10","10"])
+ const [TripHistory,setTripHistory] = React.useState([])
+ const [MissedTrip,setMissedTrips] = React.useState([])
+ const [historyData,setHistoryData] = React.useState([])
+ const deleteTrip=async()=>{
+  let data=await firestore()
+  .collection('Users')
+  .doc(Auth().currentUser.uid)
+  .collection("TripData")
+  .doc('bookedData');
+  let documentId=(await data.get()).data().documentId;
+  data.delete();
+
+  let refRemoveTrip=firestore().collection('Upcoming_Trips').doc(documentId)
+  let bookedseats=(await refRemoveTrip.get()).data().bookedSeatsNumber
+  refRemoveTrip.update({
+    bookedSeatsNumber:bookedseats.filter(x => x.StudentBooked!=Auth().currentUser.uid)
+  }).then(()=>{
+    console.log("deleted")
+    setUpcomingTrips([])
+  })
   
+}
+
+
   const getUpcomingTrips = async () => {
     let TripData= await firestore()
     .collection('Users')
@@ -35,16 +56,30 @@ function history () {
       setUpcomingTrips([(await TripData.get()).data()])
     }
   }
-  React.useEffect(()=>{
+  React.useEffect(()=>{ 
     getUpcomingTrips()
-    console.log(TripTime)
-    if(TripTime.length<=0)
-    {
-      getTripTime()
+    getTripTime()
+    GetHistoryRecord()
+  },[])
+  React.useEffect(()=>{ 
+    if(historyData.length>0)
+    {setTripHistory(historyData.filter(item=>item.tripStatus=="finished"))
+    setMissedTrips(historyData.filter(item=>item.tripStatus=="missed"))
     }
-    
-  })
+  },[historyData])
   
+  const GetHistoryRecord=()=>{
+  
+     firestore()
+    .collection('Users')
+    .doc(Auth().currentUser.uid)
+    .collection("TripData")
+    .doc('HistorybookedData').get().then((data)=>{
+      setHistoryData(data.data().TripNumber)
+    })
+
+   
+  }
 
 
   
@@ -92,7 +127,7 @@ if(a[1].toLowerCase()=="AM".toLowerCase())
   return a[0]
 }
 else {
-  console.log(a[0]+"ok")
+  
   var abc=a[0].split(":")
   var hours=parseInt(abc[0])+12
   return hours+":"+"00"
@@ -101,8 +136,8 @@ else {
 
 const formatAMPM=(timeRef)=> {
 
-  var TimeTrip = ReturnTimeFormat("04:00 PM")
-
+  var TimeTrip = ReturnTimeFormat(timeRef)
+// console.log(TimeTrip)
   
   var myDate2 = new Date();
   var year=myDate2.getFullYear();
@@ -152,42 +187,59 @@ const formatAMPM=(timeRef)=> {
      <Text style={styles.tripdetailtext}>Starting Time:</Text>
      <Text style={styles.tripdetailtext}>{item.startingTime}</Text>
      </View>
-      {Number(TripTime[0])==0 && Number(TripTime[1])==0&& Number(TripTime[2])<=20?
+      {Number(TripTime[0])==0 && Number(TripTime[1])==0&& Number(TripTime[2])<=60 && UpcomingTrips.length>0 ?
         (<View style={styles.TripDetailCard}>
-      <TouchableOpacity style={styles.ButtonStyle} ><Text style={styles.ButtonText}>Track Bus</Text></TouchableOpacity>
+      <TouchableOpacity style={styles.ButtonStyle} onPress={()=>{navigation.navigate("TrackBus")}} ><Text style={styles.ButtonText}>Track Bus</Text></TouchableOpacity>
 
-     <TouchableOpacity style={styles.ButtonStyle} ><Text style={styles.ButtonText}> Delete Trip</Text></TouchableOpacity>
+     <TouchableOpacity style={styles.ButtonStyle} onPress={()=>deleteTrip()} ><Text style={styles.ButtonText}> Delete Trip</Text></TouchableOpacity>
      </View>)
       :null}
      </View>
      ))}
+     {UpcomingTrips.length<=0 ?
+        (<View style={{justifyContent:'center'}}>
+        <Text style={{textAlign:'center',}}>No Upcoming Trip Please Book you trip right now</Text>
+     <TouchableOpacity style={styles.ButtonStyle} onPress={()=>navigation.navigate("subscription")}><Text style={styles.ButtonText}>Book Trip</Text></TouchableOpacity>
+        
+      </View>):null
+      }
         </Panel>
         <Panel title="Finished Trips">
       {TripHistory.map((item,index)=>(
         <View key={index}>
-        <Title style={{textAlign:'center'}}>Trip {index+1}</Title>
+        <Title style={{textAlign:'center'}}>Trip Date {new Date(item.TimeTrip.toDate()).toDateString()}</Title>
      <View style={styles.TripDetailCard}>
      <Text style={styles.tripdetailtext}>From Location:</Text>
-     <Text style={styles.tripdetailtext}>APU</Text>
+     <Text style={styles.tripdetailtext}>{item.fromlocation}</Text>
      </View>
      <View style={styles.TripDetailCard}>
      <Text style={styles.tripdetailtext}>To Location:</Text>
-     <Text style={styles.tripdetailtext}>APIIT</Text>
+     <Text style={styles.tripdetailtext}>{item.tolocation}</Text>
      </View>
         </View>
-      ))}</Panel>
+      ))}
+      {TripHistory.length<=0 ?
+        (<View style={{justifyContent:'center'}}>
+        <Text style={{textAlign:'center',}}>You have not take any trip</Text>
+     <TouchableOpacity style={styles.ButtonStyle} onPress={()=>navigation.navigate("subscription")}><Text style={styles.ButtonText}>Book Trip</Text></TouchableOpacity>
+        
+      </View>):null
+      }
+      
+
+      </Panel>
 
       <Panel title="Missed Trips">
-      {TripHistory.map((item,index)=>(
+      {MissedTrip.map((item,index)=>(
         <View key={index}>
-        <Title style={{textAlign:'center'}}>Trip {index+1}</Title>
+        <Title style={{textAlign:'center'}}>Trip Date {new Date(item.TimeTrip.toDate()).toDateString()}</Title>
      <View style={styles.TripDetailCard}>
      <Text style={styles.tripdetailtext}>From Location:</Text>
-     <Text style={styles.tripdetailtext}>APU</Text>
+     <Text style={styles.tripdetailtext}>{item.fromlocation}</Text>
      </View>
      <View style={styles.TripDetailCard}>
      <Text style={styles.tripdetailtext}>To Location:</Text>
-     <Text style={styles.tripdetailtext}>APIIT</Text>
+     <Text style={styles.tripdetailtext}>{item.tolocation}</Text>
      </View>
         </View>
       ))}</Panel>
